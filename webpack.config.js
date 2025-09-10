@@ -58,10 +58,10 @@ module.exports = {
         library: { type: "module" },
 
         // For remotes (please adjust)
-        name: "customModule",
+        name: "NubGames-LibraryH3lp",
         filename: "remoteEntry.js",
         exposes: {
-            './custom-module': './src/bootstrap.ts',
+            './NubGames-LibraryH3lp': './src/bootstrapNubGames-LibraryH3lp.ts',
         },
 
         // For hosts (please adjust)

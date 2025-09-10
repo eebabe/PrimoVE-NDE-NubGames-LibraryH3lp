@@ -22,8 +22,9 @@ describe('AppComponent', () => {
 
   it('should render title', () => {
     const fixture = TestBed.createComponent(AppComponent);
+    const app = fixture.componentInstance;
     fixture.detectChanges();
     const compiled = fixture.nativeElement as HTMLElement;
-    expect(compiled.querySelector('.content span')?.textContent).toContain('custom-module app is running!');
+    expect(compiled.querySelector('p')?.textContent).toContain(`Custom module test ${app.title}`);
   });
 });

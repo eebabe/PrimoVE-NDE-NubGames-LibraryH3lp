@@ -6,6 +6,7 @@ import {Router} from "@angular/router";
 import {selectorComponentMap} from "./custom1-module/customComponentMappings";
 import {TranslateModule} from "@ngx-translate/core";
 import { CommonModule } from '@angular/common';
+import { provideHttpClient, withJsonpSupport } from '@angular/common/http';
 import { AutoAssetSrcDirective } from './services/auto-asset-src.directive';
 
 export const AppModule = ({providers}: {providers:any}) => {
@@ -20,7 +21,10 @@ export const AppModule = ({providers}: {providers:any}) => {
       CommonModule,
       TranslateModule.forRoot({})
     ],
-    providers: providers,
+    providers: [
+      provideHttpClient(withJsonpSupport()),
+      ...providers,
+    ],
     bootstrap: []
   })
   class AppModule implements DoBootstrap{
@@ -47,4 +51,3 @@ export const AppModule = ({providers}: {providers:any}) => {
   }
   return AppModule
 }
-
