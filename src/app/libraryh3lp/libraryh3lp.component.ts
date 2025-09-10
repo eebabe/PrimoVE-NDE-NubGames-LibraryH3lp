@@ -31,7 +31,7 @@ export class Libraryh3lpComponent implements OnInit {
 
   // Chat parameters
   queueName?: string;
-  server = 'sg.libraryh3lp.com';
+  server = 'libraryh3lp.com';
   snippetId?: string;
 
   // Optional customizations
