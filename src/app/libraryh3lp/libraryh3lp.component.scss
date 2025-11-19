@@ -14,7 +14,7 @@
 
 .lh3-chat-tooltip {
   position: absolute;
-  top: 90px;
+  top: 60px;
   right: 10px;
   width: 260px;
   background-color: var(--sys-surface);
@@ -27,8 +27,8 @@
 
 .lh3-chat-tooltip-arrow {
   position: absolute;
-  bottom: 10px;
-  left: 65px;
+  bottom: 0px;
+  left: 40px;
   width: 0px;
   border-top: 5px solid var(--sys-primary);
   border-right: 5px solid transparent;
