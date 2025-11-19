@@ -1,10 +1,14 @@
-import {PROXY_TARGET} from "./proxy.const.mjs";
+//import {PROXY_TARGET} from "./proxy.const.mjs";
 import {customizationConfigOverride} from "./customization_config_override.mjs";
 import {deepMerge} from "./proxy-utils.mjs";
 
 
+// Configuration for the development proxy
+const environments = {
+  'libraryh3lp': 'https://lincoln.primo.exlibrisgroup.com',
+};
 
-
+export const PROXY_TARGET = environments['libraryh3lp'];
 
 
 const proxyRules = [

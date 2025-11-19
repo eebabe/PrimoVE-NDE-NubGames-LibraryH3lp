@@ -1,2 +1,2 @@
-import('./bootstrapNubGames-LibraryH3lp')
+import('./bootstrap')
 	.catch(err => console.error(err));

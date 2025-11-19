@@ -3,9 +3,7 @@ import {
   Component,
   ElementRef,
   HostListener,
-  Inject,
   NgZone,
-  Optional,
   OnInit
 } from '@angular/core';
 import { CommonModule } from '@angular/common';
@@ -29,10 +27,10 @@ export class Libraryh3lpComponent implements OnInit {
   mouseDown = false;
   showChat = false;
 
-  // Chat parameters
-  queueName?: string;
-  server = 'libraryh3lp.com';
-  snippetId?: string;
+  // PLEASE UPDATE THE FOLLOWING THREE PARAMETERS TO MATCH YOUR SUBSCRIPTION.
+  queueName = ''; // the name of one of your queues
+  server = 'libraryh3lp.com'; // please change if you use a regional server
+  snippetId = ''; // the ID of your 'embedded' style chat snippet
 
   // Optional customizations
   iconOfflineColor?: string;
@@ -45,8 +43,6 @@ export class Libraryh3lpComponent implements OnInit {
   constructor(
     private elRef: ElementRef,
     private http: HttpClient,
-    @Optional() @Inject('MODULE_PARAMETERS')
-    private moduleParams: Partial<Libraryh3lpComponent> | null, // type the injected params
     private zone: NgZone
   ) {
     console.log('libraryh3lp: constructor');
@@ -56,31 +52,8 @@ export class Libraryh3lpComponent implements OnInit {
     this[key] = value;
   }
 
-  useModuleParameter<K extends keyof this>(parameterName: K): void {
-    const value = (this.moduleParams as Partial<Libraryh3lpComponent> | null)?.[
-      parameterName as keyof Libraryh3lpComponent
-    ];
-
-    if (value !== undefined) {
-      this.setParam(parameterName, value as this[K]);
-    }
-  }
-
   ngOnInit() {
     console.log('libraryh3lp: ngOnInit');
-
-    // Chat basics
-    this.useModuleParameter('server');
-    this.useModuleParameter('queueName');
-    this.useModuleParameter('snippetId');
-
-    // Look & feel customizations
-    this.useModuleParameter('iconOfflineColor');
-    this.useModuleParameter('iconOnlineColor');
-    this.useModuleParameter('iconPosition');
-    this.useModuleParameter('iconSize');
-    this.useModuleParameter('showPresence');
-    this.useModuleParameter('tooltipContent');
 
     if (this.queueName) {
       this.checkAvailability();
