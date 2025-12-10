@@ -16,13 +16,15 @@
   position: absolute;
   top: 60px;
   right: 10px;
-  width: 260px;
+  width: auto;
   background-color: var(--sys-surface);
   border: 1px solid var(--sys-primary);
   border-radius: 0px;
   color: var(--sys-on-surface);
   padding: 10px;
   text-align: right;
+  white-space: nowrap;
+  word-wrap: normal;
 }
 
 .lh3-chat-tooltip-arrow {
@@ -67,8 +69,8 @@ button.lh3-chat-button svg {
   background-color: var(--sys-surface);
   border: 1px solid var(--sys-primary);
   color: var(--sys-on-surface);
-  height: 390px;
-  width: 400px;
+  height: auto;
+  width: auto;
   max-height: 95vh;
   max-width: 95vw;
 }
