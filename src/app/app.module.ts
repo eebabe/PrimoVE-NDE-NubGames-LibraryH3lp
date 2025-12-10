@@ -1,4 +1,4 @@
-import {ApplicationRef, DoBootstrap, Injector, ModuleWithProviders, NgModule} from '@angular/core';
+import {ApplicationRef, DoBootstrap, Injector, NgModule} from '@angular/core';
 import {BrowserModule} from '@angular/platform-browser';
 import {AppComponent} from './app.component';
 import {createCustomElement, NgElementConstructor} from "@angular/elements";
@@ -8,8 +8,11 @@ import {TranslateModule} from "@ngx-translate/core";
 import { CommonModule } from '@angular/common';
 import { provideHttpClient, withJsonpSupport } from '@angular/common/http';
 import { AutoAssetSrcDirective } from './services/auto-asset-src.directive';
+import {SHELL_ROUTER} from "./injection-tokens";
 
-export const AppModule = ({providers}: {providers:any}) => {
+
+
+export const AppModule = ({providers, shellRouter}: {providers:any, shellRouter: Router}) => {
    @NgModule({
     declarations: [
       AppComponent,
@@ -24,6 +27,7 @@ export const AppModule = ({providers}: {providers:any}) => {
     providers: [
       provideHttpClient(withJsonpSupport()),
       ...providers,
+      {provide: SHELL_ROUTER, useValue: shellRouter},
     ],
     bootstrap: []
   })
