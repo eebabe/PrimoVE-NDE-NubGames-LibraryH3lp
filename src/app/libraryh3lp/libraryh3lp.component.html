@@ -1,12 +1,39 @@
 <div class="lh3-chat-widget" [style.top]="iconPosition || null">
-  <header aria-labelled-by="lh3-chat-button" class="lh3-chat-header">
+  <header class="lh3-chat-header">
     @if (hoverTooltip) {
-      <div class="lh3-chat-tooltip" [innerHTML]="tooltipContent"></div>
-      <div class="lh3-chat-tooltip-arrow" aria-label="hidden"></div>
+      <div
+        id="lh3-chat-tooltip"
+        class="lh3-chat-tooltip"
+        role="tooltip"
+        [innerHTML]="tooltip"
+      ></div>
+      <div
+        class="lh3-chat-tooltip-arrow"
+        aria-hidden="true"
+      ></div>
     }
     @if (!showChat) {
-      <button id="lh3-chat-button" class="lh3-chat-button" (click)="toggleChatTab($event)" (mouseover)="mouseOverChatTab()" (mouseout)="mouseOutChatTab()" (touchend)="toggleChatTab($event)" aria-label="Open chat" [ngStyle]="{'height': iconSize || null, 'width': iconSize || null}">
-        <img [src]="presenceDotUrl()" aria-hidden="true" alt="chat availiablity indicator" [hidden]="!showPresence" />
+      <button
+        #openChatButton
+        id="lh3-chat-button"
+        class="lh3-chat-button"
+        type="button"
+        (click)="toggleChatTab($event)"
+        (focus)="mouseOverChatTab()"
+        (blur)="mouseOutChatTab()"
+        (mouseover)="mouseOverChatTab()"
+        (mouseout)="mouseOutChatTab()"
+        aria-label="Open chat"
+        aria-controls="lh3-chat-frame"
+        [attr.aria-describedby]="hoverTooltip ? 'lh3-chat-tooltip' : null"
+        [ngStyle]="{'height': iconSize || null, 'width': iconSize || null}"
+      >
+        <img
+          [src]="presenceDotUrl()"
+          aria-hidden="true"
+          alt=""
+          [hidden]="!showPresence"
+        />
         <svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" xml:space="preserve" viewBox="0 60 512 390" [attr.fill]="chatOnline ? (iconOnlineColor || null) : (iconOfflineColor || null)">
           <g>
             <g>
@@ -20,9 +47,20 @@
       </button>
     }
   </header>
-  <div class="lh3-chat-frame-wrap" cdkDrag [hidden]="!showChat">
+  <div
+    id="lh3-chat-frame"
+    class="lh3-chat-frame-wrap"
+    cdkDrag
+    [hidden]="!showChat"
+  >
     <div class="lh3-close-chat-bar">
-      <button type="button" class="lh3-close-chat" (click)="toggleChatTab($event)" (touchend)="toggleChatTab($event)" aria-label="Close chat">&times;</button>
+      <button
+        #closeChatButton
+        type="button"
+        class="lh3-close-chat"
+        (click)="toggleChatTab($event)"
+        aria-label="Close chat">&times;
+      </button>
     </div>
     <div class="needs-js"></div>
   </div>

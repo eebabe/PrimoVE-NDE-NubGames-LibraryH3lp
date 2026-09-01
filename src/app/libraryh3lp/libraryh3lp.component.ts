@@ -6,7 +6,8 @@ import {
   Inject,
   NgZone,
   Optional,
-  OnInit
+  OnInit,
+  ViewChild
 } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { HttpClient } from '@angular/common/http';
@@ -21,12 +22,17 @@ declare var jabber_resources: any;
   styleUrl: './libraryh3lp.component.scss'
 })
 export class Libraryh3lpComponent implements OnInit {
+  @ViewChild('closeChatButton')
+  closeChatButton?: ElementRef<HTMLButtonElement>;
+
+  @ViewChild('openChatButton')
+  openChatButton?: ElementRef<HTMLButtonElement>;
+
   // Internal recordkeeping
   availabilityIntervalId?: ReturnType<typeof setInterval>;
   chatAvailability = 'unavailable';
   chatOnline = false;
   hoverTooltip = false;
-  mouseDown = false;
   showChat = false;
 
   // Chat parameters
@@ -39,8 +45,10 @@ export class Libraryh3lpComponent implements OnInit {
   iconOnlineColor?: string;
   iconPosition?: string;
   iconSize?: string;
+  offlineTooltipContent?: string;
   showPresence = true;
   tooltipContent = '<div>Questions? Click to chat with us.</div>';
+  tooltip?: string;
 
   constructor(
     private elRef: ElementRef,
@@ -81,10 +89,11 @@ export class Libraryh3lpComponent implements OnInit {
     this.useModuleParameter('iconSize');
     this.useModuleParameter('showPresence');
     this.useModuleParameter('tooltipContent');
+    this.useModuleParameter('offlineTooltipContent');
 
     if (this.queueName) {
       this.checkAvailability();
-      this.availabilityIntervalId = setInterval(this.checkAvailability, 5*1000);
+      this.availabilityIntervalId = setInterval(this.checkAvailability, 5 * 1000);
     }
 
     if (this.snippetId) {
@@ -132,7 +141,7 @@ export class Libraryh3lpComponent implements OnInit {
 
   @HostListener('document:keydown.escape', ['$event'])
   handleEscape(event: KeyboardEvent) {
-    if (this.showChat && !this.chatOnline) {
+    if (this.showChat) {
       this.toggleChatTab(event);
     }
   }
@@ -156,11 +165,28 @@ export class Libraryh3lpComponent implements OnInit {
   }
 
   mouseOverChatTab = () => {
-    this.hoverTooltip = (this.chatOnline && !this.showChat) ? true : false;
+    if (!this.showChat) {
+      if (this.chatOnline) {
+        if (this.tooltipContent) {
+          this.hoverTooltip = true;
+          this.tooltip = this.tooltipContent;
+          return false
+        }
+      } else {
+        if (this.offlineTooltipContent) {
+          this.hoverTooltip = true;
+          this.tooltip = this.offlineTooltipContent;
+          return false
+        }
+      }
+    }
+    this.hoverTooltip = false;
+    this.tooltip = undefined;
     return false;
   };
   mouseOutChatTab = () => {
     this.hoverTooltip = false;
+    this.tooltip = undefined;
     return false;
   };
 
@@ -176,7 +202,18 @@ export class Libraryh3lpComponent implements OnInit {
     }
 
     this.hoverTooltip = false;
+    this.tooltip = undefined;
     this.showChat = !this.showChat;
+
+    if (this.showChat) {
+      setTimeout(() => {
+        this.closeChatButton?.nativeElement.focus();
+      })
+    } else {
+      setTimeout(() => {
+        this.openChatButton?.nativeElement.focus();
+      })
+    }
 
     return false;
   };

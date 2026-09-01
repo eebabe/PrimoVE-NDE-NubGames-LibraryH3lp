@@ -43,11 +43,23 @@
 button.lh3-chat-button {
   background-color: transparent;
   border: none;
+  cursor: pointer;
   display: block;
   padding: 0;
   position: relative;
   height: 60px;
   width: 60px;
+}
+
+button.lh3-chat-button:focus-visible,
+button.lh3-close-chat:focus-visible {
+  outline: 3px solid var(--sys-primary);
+  outline-offset: 4px;
+}
+
+button.lh3-close-chat:focus-visible {
+  outline: 3px solid var(--sys-on-primary);
+  outline-offset: 2px;
 }
 
 button.lh3-chat-button img {
