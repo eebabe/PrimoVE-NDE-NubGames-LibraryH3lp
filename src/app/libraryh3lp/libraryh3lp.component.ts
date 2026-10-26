@@ -22,6 +22,12 @@ declare var jabber_resources: any;
   styleUrl: './libraryh3lp.component.scss'
 })
 export class Libraryh3lpComponent implements OnInit {
+  @ViewChild(CdkDrag)
+  chatDrag?: CdkDrag;
+
+  @ViewChild('chatFrame')
+  chatFrame?: ElementRef<HTMLDivElement>;
+
   @ViewChild('closeChatButton')
   closeChatButton?: ElementRef<HTMLButtonElement>;
 
@@ -31,6 +37,7 @@ export class Libraryh3lpComponent implements OnInit {
   // Internal recordkeeping
   availabilityIntervalId?: ReturnType<typeof setInterval>;
   chatAvailability = 'unavailable';
+  chatFrameTop = 0;
   chatOnline = false;
   hoverTooltip = false;
   showChat = false;
@@ -45,6 +52,7 @@ export class Libraryh3lpComponent implements OnInit {
   iconOnlineColor?: string;
   iconPosition?: string;
   iconSize?: string;
+  iconText?: string;
   offlineTooltipContent?: string;
   showPresence = true;
   tooltipContent = '<div>Questions? Click to chat with us.</div>';
@@ -87,9 +95,10 @@ export class Libraryh3lpComponent implements OnInit {
     this.useModuleParameter('iconOnlineColor');
     this.useModuleParameter('iconPosition');
     this.useModuleParameter('iconSize');
+    this.useModuleParameter('iconText');
+    this.useModuleParameter('offlineTooltipContent');
     this.useModuleParameter('showPresence');
     this.useModuleParameter('tooltipContent');
-    this.useModuleParameter('offlineTooltipContent');
 
     if (this.queueName) {
       this.checkAvailability();
@@ -146,6 +155,14 @@ export class Libraryh3lpComponent implements OnInit {
     }
   }
 
+  @HostListener('window:resize')
+  handleWindowResize() {
+    if (this.showChat) {
+      this.chatDrag?.reset();
+      this.positionChatFrame();
+    }
+  }
+
   loadSnippet(id?: string): void {
     if (!id) {
       return;
@@ -183,12 +200,29 @@ export class Libraryh3lpComponent implements OnInit {
     this.hoverTooltip = false;
     this.tooltip = undefined;
     return false;
-  };
+  }
+
   mouseOutChatTab = () => {
     this.hoverTooltip = false;
     this.tooltip = undefined;
     return false;
-  };
+  }
+
+  positionChatFrame = () => {
+    const frame = this.chatFrame?.nativeElement;
+    if (!frame) return;
+
+    const margin = 12;
+    const height = frame.getBoundingClientRect().height;
+
+    this.chatFrameTop = Math.max(
+      margin,
+      Math.min(
+        window.innerHeight - height - margin,
+        window.innerHeight * 0.5 - height * 0.5
+      )
+    );
+  }
 
   presenceDotUrl = () => `https://${this.server}/presence/image/flat-lang-neutral/${this.chatAvailability}`
 
@@ -207,6 +241,8 @@ export class Libraryh3lpComponent implements OnInit {
 
     if (this.showChat) {
       setTimeout(() => {
+        this.chatDrag?.reset();
+        this.positionChatFrame();
         this.closeChatButton?.nativeElement.focus();
       })
     } else {
