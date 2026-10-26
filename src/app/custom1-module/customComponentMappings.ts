@@ -2,5 +2,5 @@ import { Libraryh3lpComponent } from '../libraryh3lp-component/libraryh3lp.compo
 
 // Define the map
 export const selectorComponentMap = new Map<string, any>([
-  ['nde-user-area-after', Libraryh3lpComponent],
+  ['nde-skip-links-after', Libraryh3lpComponent],
 ]);

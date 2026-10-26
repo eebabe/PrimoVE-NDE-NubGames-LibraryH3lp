@@ -14,7 +14,7 @@
 
 .lh3-chat-tooltip {
   position: absolute;
-  top: 60px;
+  top: calc(100% + 8px);
   right: 10px;
   width: auto;
   background-color: var(--sys-surface);
@@ -29,15 +29,13 @@
 
 .lh3-chat-tooltip-arrow {
   position: absolute;
-  bottom: 0px;
-  left: 40px;
-  width: 0px;
-  border-top: 5px solid var(--sys-primary);
-  border-right: 5px solid transparent;
+  top: 100%;
+  right: 30px;
+  width: 0;
+  height: 0;
   border-left: 5px solid transparent;
-  font-size: 0px;
-  line-height: 0;
-  transform: rotate(180deg);
+  border-right: 5px solid transparent;
+  border-bottom: 5px solid var(--sys-primary);
 }
 
 button.lh3-chat-button {
@@ -50,6 +48,30 @@ button.lh3-chat-button {
   width: 60px;
 }
 
+button.lh3-chat-button:focus-visible {
+  outline: 2px solid var(--sys-primary);
+  outline-offset: 3px;
+}
+
+button.lh3-chat-button:has(.lh3-chat-button-text) {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: auto;
+  height: auto;
+  min-width: 100px;
+  padding: 10px 16px;
+  background-color: var(--sys-primary);
+  color: var(--sys-on-primary);
+  border-radius: 6px;
+  cursor: pointer;
+  font: inherit;
+}
+
+.lh3-chat-button-text {
+  white-space: nowrap;
+}
+
 button.lh3-chat-button img {
   position: absolute;
   top: 5%;
@@ -60,19 +82,28 @@ button.lh3-chat-button img {
   width: 10px;
 }
 
+button.lh3-chat-button:has(.lh3-chat-button-text) img {
+  top: -4px;
+  right: -4px;
+}
+
 button.lh3-chat-button svg {
   fill: var(--sys-primary);
   padding: 2px 0;
 }
 
 .lh3-chat-frame-wrap {
+  position: fixed;
+  right: 15px;
+  top: 12px;
   background-color: var(--sys-surface);
   border: 1px solid var(--sys-primary);
   color: var(--sys-on-surface);
   height: auto;
   width: auto;
-  max-height: 95vh;
+  max-height: calc(100dvh - 24px);
   max-width: 95vw;
+  overflow: auto;
 }
 
 .lh3-close-chat-bar {

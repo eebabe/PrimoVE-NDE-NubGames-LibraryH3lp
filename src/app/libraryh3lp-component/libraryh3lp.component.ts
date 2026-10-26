@@ -4,7 +4,8 @@ import {
   ElementRef,
   HostListener,
   NgZone,
-  OnInit
+  OnInit,
+  ViewChild
 } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { HttpClient } from '@angular/common/http';
@@ -19,12 +20,24 @@ declare var jabber_resources: any;
   styleUrl: './libraryh3lp.component.scss'
 })
 export class Libraryh3lpComponent implements OnInit {
+  @ViewChild(CdkDrag)
+  chatDrag?: CdkDrag;
+
+  @ViewChild('chatFrame')
+  chatFrame?: ElementRef<HTMLDivElement>;
+
+  @ViewChild('closeChatButton')
+  closeChatButton?: ElementRef<HTMLButtonElement>;
+
+  @ViewChild('openChatButton')
+  openChatButton?: ElementRef<HTMLButtonElement>;
+
   // Internal recordkeeping
   availabilityIntervalId?: ReturnType<typeof setInterval>;
   chatAvailability = 'unavailable';
+  chatFrameTop = 0;
   chatOnline = false;
   hoverTooltip = false;
-  mouseDown = false;
   showChat = false;
 
   // PLEASE UPDATE THE FOLLOWING THREE PARAMETERS TO MATCH YOUR SUBSCRIPTION.
@@ -37,8 +50,11 @@ export class Libraryh3lpComponent implements OnInit {
   iconOnlineColor?: string;
   iconPosition?: string;
   iconSize?: string;
+  iconText?: string;
+  offlineTooltipContent?: string;
   showPresence = true;
   tooltipContent = '<div>Questions? Click to chat with us.</div>';
+  tooltip?: string;
 
   constructor(
     private elRef: ElementRef,
@@ -57,7 +73,7 @@ export class Libraryh3lpComponent implements OnInit {
 
     if (this.queueName) {
       this.checkAvailability();
-      this.availabilityIntervalId = setInterval(this.checkAvailability, 5*1000);
+      this.availabilityIntervalId = setInterval(this.checkAvailability, 5 * 1000);
     }
 
     if (this.snippetId) {
@@ -105,8 +121,16 @@ export class Libraryh3lpComponent implements OnInit {
 
   @HostListener('document:keydown.escape', ['$event'])
   handleEscape(event: KeyboardEvent) {
-    if (this.showChat && !this.chatOnline) {
+    if (this.showChat) {
       this.toggleChatTab(event);
+    }
+  }
+
+  @HostListener('window:resize')
+  handleWindowResize() {
+    if (this.showChat) {
+      this.chatDrag?.reset();
+      this.positionChatFrame();
     }
   }
 
@@ -129,13 +153,47 @@ export class Libraryh3lpComponent implements OnInit {
   }
 
   mouseOverChatTab = () => {
-    this.hoverTooltip = (this.chatOnline && !this.showChat) ? true : false;
+    if (!this.showChat) {
+      if (this.chatOnline) {
+        if (this.tooltipContent) {
+          this.hoverTooltip = true;
+          this.tooltip = this.tooltipContent;
+          return false
+        }
+      } else {
+        if (this.offlineTooltipContent) {
+          this.hoverTooltip = true;
+          this.tooltip = this.offlineTooltipContent;
+          return false
+        }
+      }
+    }
+    this.hoverTooltip = false;
+    this.tooltip = undefined;
     return false;
-  };
+  }
+
   mouseOutChatTab = () => {
     this.hoverTooltip = false;
+    this.tooltip = undefined;
     return false;
-  };
+  }
+
+  positionChatFrame = () => {
+    const frame = this.chatFrame?.nativeElement;
+    if (!frame) return;
+
+    const margin = 12;
+    const height = frame.getBoundingClientRect().height;
+
+    this.chatFrameTop = Math.max(
+      margin,
+      Math.min(
+        window.innerHeight - height - margin,
+        window.innerHeight * 0.5 - height * 0.5
+      )
+    );
+  }
 
   presenceDotUrl = () => `https://${this.server}/presence/image/flat-lang-neutral/${this.chatAvailability}`
 
@@ -149,7 +207,20 @@ export class Libraryh3lpComponent implements OnInit {
     }
 
     this.hoverTooltip = false;
+    this.tooltip = undefined;
     this.showChat = !this.showChat;
+
+    if (this.showChat) {
+      setTimeout(() => {
+        this.chatDrag?.reset();
+        this.positionChatFrame();
+        this.closeChatButton?.nativeElement.focus();
+      })
+    } else {
+      setTimeout(() => {
+        this.openChatButton?.nativeElement.focus();
+      })
+    }
 
     return false;
   };
